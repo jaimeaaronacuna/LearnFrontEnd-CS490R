@@ -1,3 +1,5 @@
+import TaskItem from "./TaskItem";
+
 function TaskList({ tasks }) {
   return (
     <ul>
