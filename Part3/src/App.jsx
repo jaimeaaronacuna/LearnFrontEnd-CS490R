@@ -1,19 +1,29 @@
 import { useEffect, useState } from "react";
 import PostsSection from "./components/posts/PostsSection";
 import ReviewsSection from "./components/reviews/ReviewsSection";
+import Login from "./components/auth/Login";
 
 const API_BASE = "http://localhost:3003/api";
 
 function App() {
+  const [token, setToken] = useState(localStorage.getItem("token"));
   const [posts, setPosts] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  if (!token) {
+    return <Login setToken={setToken} />;
+  }
+
   const fetchPosts = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/posts`);
+      const res = await fetch(`${API_BASE}/posts`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await res.json();
       setPosts(data);
     } catch {
@@ -25,7 +35,11 @@ function App() {
   const fetchReviews = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/reviews`);
+      const res = await fetch(`${API_BASE}/reviews`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await res.json();
       setReviews(data);
     } catch {
